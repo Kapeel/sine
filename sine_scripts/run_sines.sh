@@ -60,13 +60,13 @@ echo Running SINE-Finder on $GENOME
 #### I haven't been able to get sine_finder to work with reverse sequences, as it seems to report TSDs wrong on the reverse strand.
 ####   so I'm only reporting on the forward strand.
 ### -f both : outputs csv and fasta
-$PYTHON2 sine_finder.py -T chunkwise -V1 -f both ${GENOMEFA}
+$PYTHON2 /sine/sine_scripts/sine_finder.py -T chunkwise -V1 -f both ${GENOMEFA}
 
 #### sine_finder outputs the fasta with the TSD included. I remove these here, so they aren't considered when clustering into families
 #mv ../${GENOME}-matches.fasta .
 #mv ../${GENOME}-matches.csv .
 
-$PYTHON2 remove_tsd_sinefinder.py ${GENOME}-matches.fasta ${GENOME}-matches.noTSD.fa
+$PYTHON2 /sine/sine_scripts/remove_tsd_sinefinder.py ${GENOME}-matches.fasta ${GENOME}-matches.noTSD.fa
 
 echo Clustering families
 #################################################################################
@@ -98,7 +98,7 @@ $VSEARCH --usearch_global ${GENOME}-matches.noTSD.fa -db $EXISTINGSINES -id 0.8 
 ## index fasta so that we can subset entries by name
 samtools faidx ${GENOME}-matches.noTSD.fa
 #Rscript get_nofams.R ## this has hardcoded in to the r script w22 specific things!! 
-Rscript get_nofams.R $GENOME
+Rscript /sine/sine_scripts/get_nofams.R $GENOME
 ### get a fasta with each SINE that needs a new family assigned
 xargs samtools faidx ${GENOME}-matches.noTSD.fa < ${GENOME}.RST.noExistingFam.txt >> ${GENOME}.RST.noExistingFam.fa
 
@@ -121,8 +121,8 @@ fi ## done with not new species
 ### cluster into families and output final gff with this R script #####
 #######################################################################
 
-Rscript generate_gff_SINE.R $GENOME $GENOMEFA $SHORTID $NEWSPECIES
+Rscript /sine/sine_scripts/generate_gff_SINE.R $GENOME $GENOMEFA $SHORTID $NEWSPECIES
 
 ## and generate a fasta ready to go for the next annotator
-$PYTHON2 switch_fasta_names.py ${GENOME}-matches.noTSD.fa ${GENOME}.RST.tabout > ${GENOME}.RST.fa
+$PYTHON2 /sine/sine_scripts/switch_fasta_names.py ${GENOME}-matches.noTSD.fa ${GENOME}.RST.tabout > ${GENOME}.RST.fa
 cat $EXISTINGSINES ${GENOME}.RST.fa > post-${GENOME}.existingRST.fa

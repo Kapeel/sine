@@ -10,7 +10,9 @@ RUN echo "tzdata tzdata/Areas select USA" > /tmp/preseed.txt; \
     apt-get update && \
     apt-get install -y tzdata
  
-RUN apt-get install -y build-essential git cmake libxml2-dev zlib1g-dev libhdf5-dev wget curl apt-utils unzip libboost-all-dev default-jre default-jdk r-base libcurl4-openssl-dev libssl-dev 
+#RUN apt-get install -y build-essential git cmake libxml2-dev zlib1g-dev libhdf5-dev wget curl apt-utils unzip libboost-all-dev default-jre default-jdk r-base libcurl4-openssl-dev libssl-dev 
+
+RUN apt-get install -y build-essential git bzip2 g++ libbz2-dev liblzma-dev make ncurses-dev cmake libxml2-dev zlib1g-dev libhdf5-dev wget curl apt-utils unzip libboost-all-dev default-jre default-jdk r-base libcurl4-openssl-dev libssl-dev
 
 ### Install R packages
 RUN echo 'source("https://bioconductor.org/biocLite.R")' > /tmp/packages.R \
@@ -20,6 +22,21 @@ RUN echo 'source("https://bioconductor.org/biocLite.R")' > /tmp/packages.R \
  &&     echo 'install.packages("data.table", dependencies = TRUE)' >> /tmp/packages.R \
  &&     echo 'install.packages("plyr", dependencies = TRUE)' >> /tmp/packages.R \
  &&     Rscript /tmp/packages.R
+ 
+### Install Samtools
+WORKDIR /tmp
+ENV SAMTOOLS_INSTALL_DIR=/opt/samtools
+RUN wget https://github.com/samtools/samtools/releases/download/1.8/samtools-1.8.tar.bz2 \
+ && tar --bzip2 -xf samtools-1.8.tar.bz2
+
+WORKDIR /tmp/samtools-1.8
+RUN ./configure --enable-plugins --prefix=$SAMTOOLS_INSTALL_DIR \
+ && make all all-htslib \
+ && make install install-htslib
+
+WORKDIR /
+RUN ln -s $SAMTOOLS_INSTALL_DIR/bin/samtools /usr/bin/samtools \
+ && rm -rf /tmp/samtools-1.8
  
 ### Install Blast
 RUN wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.2.26/ncbi-blast-2.2.26+-x64-linux.tar.gz \
