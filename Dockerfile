@@ -78,4 +78,4 @@ RUN git clone https://github.com/Kapeel/sine.git
 #WORKDIR /maize_v4_TE_annotation/helitron
 RUN cd /sine/sine_scripts
 
-ENTRYPOINT ["sh", "/sine/sine_scripts/run_sines.sh"]
+ENTRYPOINT ["bash", "/sine/sine_scripts/run_sines.sh"]
