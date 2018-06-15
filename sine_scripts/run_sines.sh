@@ -78,10 +78,10 @@ $VSEARCH -allpairs_global ${GENOME}-matches.noTSD.fa -blast6out ${GENOME}-matche
 $SILIX ${GENOME}-matches.noTSD.fa ${GENOME}-matches.noTSD.allvall.8080.out -f SINE -i 0.8 -r 0.8 > ${GENOME}-matches.noTSD.8080.fnodes
 ## vsearch each against the MTEC exemplars
 
-if [ ! -f TE_12-Feb-2015_15-35.fa ] ## get mtec db if needed
-then
-wget http://maizetedb.org/~maize/TE_12-Feb-2015_15-35.fa
-fi
+#if [ ! -f TE_12-Feb-2015_15-35.fa ] ## get mtec db if needed
+#then
+#wget http://maizetedb.org/~maize/TE_12-Feb-2015_15-35.fa
+#fi
 $VSEARCH --usearch_global TE_12-Feb-2015_15-35.fa -db ${GENOME}-matches.noTSD.fa -id 0.8 -query_cov 0.8 -target_cov 0.8 -blast6out ${GENOME}-matches.noTSD.TEDB8080.out -strand both -top_hits_only --threads $CPU
 
 fi ## end loop if new species
