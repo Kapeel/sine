@@ -44,13 +44,13 @@ fi
 ## Get Sine-Finder if necessary ##
 ##################################
 
-if [ ! -f sine_finder.py ] 
-then
+#if [ ! -f sine_finder.py ] 
+#then
 #### get the SINE-Finder program from Wenke et al. 2011
-wget http://www.plantcell.org/content/suppl/2011/08/29/tpc.111.088682.DC1/Supplemental_Data_Set_1-sine_finder.txt
+#wget http://www.plantcell.org/content/suppl/2011/08/29/tpc.111.088682.DC1/Supplemental_Data_Set_1-sine_finder.txt
 #### change name
-mv Supplemental_Data_Set_1-sine_finder.txt sine_finder.py
-fi
+#mv Supplemental_Data_Set_1-sine_finder.txt sine_finder.py
+#fi
 
 ##########################
 #### run sinefinder   ####
@@ -60,11 +60,11 @@ echo Running SINE-Finder on $GENOME
 #### I haven't been able to get sine_finder to work with reverse sequences, as it seems to report TSDs wrong on the reverse strand.
 ####   so I'm only reporting on the forward strand.
 ### -f both : outputs csv and fasta
-$PYTHON2 sine_finder.py -T chunkwise -V1 -f both ${GENOMEFA}
+$PYTHON2 /sine/sine_scripts/sine_finder.py -T chunkwise -V1 -f both ${GENOMEFA}
 
 #### sine_finder outputs the fasta with the TSD included. I remove these here, so they aren't considered when clustering into families
-mv ../${GENOME}-matches.fasta .
-mv ../${GENOME}-matches.csv .
+#mv ../${GENOME}-matches.fasta .
+#mv ../${GENOME}-matches.csv .
 
 $PYTHON2 /sine/sine_scripts/remove_tsd_sinefinder.py ${GENOME}-matches.fasta ${GENOME}-matches.noTSD.fa
 
