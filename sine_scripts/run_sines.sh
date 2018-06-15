@@ -60,11 +60,11 @@ echo Running SINE-Finder on $GENOME
 #### I haven't been able to get sine_finder to work with reverse sequences, as it seems to report TSDs wrong on the reverse strand.
 ####   so I'm only reporting on the forward strand.
 ### -f both : outputs csv and fasta
-$PYTHON2 /sine/sine_scripts/sine_finder.py -T chunkwise -V1 -f both ${GENOMEFA}
+$PYTHON2 sine_finder.py -T chunkwise -V1 -f both ${GENOMEFA}
 
 #### sine_finder outputs the fasta with the TSD included. I remove these here, so they aren't considered when clustering into families
-#mv ../${GENOME}-matches.fasta .
-#mv ../${GENOME}-matches.csv .
+mv ../${GENOME}-matches.fasta .
+mv ../${GENOME}-matches.csv .
 
 $PYTHON2 /sine/sine_scripts/remove_tsd_sinefinder.py ${GENOME}-matches.fasta ${GENOME}-matches.noTSD.fa
 
